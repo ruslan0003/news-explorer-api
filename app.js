@@ -16,8 +16,6 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('Код запущен в режиме разработки');
 }
 
-console.log(process.env.SECRET_KEY);
-
 app.use(cors());
 
 app.use(helmet());

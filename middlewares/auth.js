@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const config = require('../utils/config');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -14,7 +13,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, config.jwtSecretKey);
+    payload = jwt.verify(token, process.env.SECRET_KEY);
   } catch (err) {
     return res
       .status(401)
