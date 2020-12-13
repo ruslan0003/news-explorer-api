@@ -1,1 +1,3 @@
-export const jwtSecretKey = process.env.SECRET_KEY;
+const jwtSecretKey = process.env.SECRET_KEY;
+
+module.exports = jwtSecretKey;
