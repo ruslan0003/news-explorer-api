@@ -13,8 +13,9 @@ const NotFoundError = require('./controllers/errors/not-found-err');
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('Код запущен в режиме разработки');
-  console.log(process.env.SECRET_KEY);
 }
+
+console.log(process.env.SECRET_KEY);
 
 app.use(cors());
 
