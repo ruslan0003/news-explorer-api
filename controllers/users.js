@@ -4,6 +4,7 @@ const User = require('../models/user');
 const BadRequestError = require('./errors/bad-req-err');
 const NotFoundError = require('./errors/not-found-err');
 const ConflictError = require('./errors/conflict-err');
+const config = require('../utils/config');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -22,7 +23,7 @@ const login = (req, res, next) => {
           }
           const token = jwt.sign(
             { _id: user._id },
-            'marshall-mathers',
+            config.jwtSecretKey,
             { expiresIn: '7d' },
           );
           res.send({ token });
