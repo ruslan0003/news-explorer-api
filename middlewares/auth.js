@@ -19,7 +19,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload;
 
-  console.log(payload);
-
   return next();
 };

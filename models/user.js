@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
       message: (props) => `${props.value} не является корректным email!`,
     },
   },
-  
+
   password: {
     type: String,
     required: true,

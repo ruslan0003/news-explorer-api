@@ -4,7 +4,7 @@ const NotFoundError = require('./errors/not-found-err');
 const ForbiddenError = require('./errors/forbidden-err');
 
 const getArticles = (req, res, next) => {
-  Article.find({ owner: req.user._id}).select('+owner')
+  Article.find({ owner: req.user._id }).select('+owner')
     .populate('user')
     .then((articles) => res.status(200).send({ data: articles }))
     .catch(() => {
@@ -14,8 +14,12 @@ const getArticles = (req, res, next) => {
 };
 
 const createArticle = (req, res, next) => {
-  const { title, keyword, text, source, image, link, date } = req.body;
-  Article.create({ title, keyword, text, source, image, link, date, owner: req.user._id })
+  const {
+    title, keyword, text, source, image, link, date,
+  } = req.body;
+  Article.create({
+    title, keyword, text, source, image, link, date, owner: req.user._id,
+  })
     .then((article) => res.status(200).send({ article }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
