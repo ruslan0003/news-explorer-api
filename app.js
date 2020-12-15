@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 require('dotenv').config();
@@ -16,9 +17,17 @@ if (process.env.NODE_ENV !== 'production') {
   console.log('Код запущен в режиме разработки');
 }
 
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Превышено допустимое количество запросов!',
+});
+
 app.use(cors());
 
 app.use(helmet());
+
+app.use(limiter);
 
 app.use(requestLogger);
 
