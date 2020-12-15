@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 100,
   message: 'Превышено допустимое количество запросов!',
 });
 
