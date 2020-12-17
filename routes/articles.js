@@ -11,6 +11,7 @@ router.post('/articles', auth, celebrate({
     keyword: Joi.string().required(),
     text: Joi.string().required(),
     source: Joi.string().required(),
+    date: Joi.string().required(),
     link: Joi.string().required().regex(/(https?:\/\/(www\.)?[a-zA-Z0-9-]+\.\S+#?$)/),
     image: Joi.string().required().regex(/(https?:\/\/(www\.)?[a-zA-Z0-9-]+\.\S+#?$)/),
   }),

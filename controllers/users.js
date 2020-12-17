@@ -4,6 +4,9 @@ const User = require('../models/user');
 const BadRequestError = require('./errors/bad-req-err');
 const NotFoundError = require('./errors/not-found-err');
 const ConflictError = require('./errors/conflict-err');
+const UnauthorizedError = require('./errors/unauth-err');
+
+const { SECRET_KEY = 'eminem' } = process.env;
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -13,16 +16,16 @@ const login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new BadRequestError('Неправильные почта или пароль');
+        throw new UnauthorizedError('Неправильные почта или пароль');
       }
       bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new BadRequestError('Неправильные почта или пароль');
+            throw new UnauthorizedError('Неправильные почта или пароль');
           }
           const token = jwt.sign(
             { _id: user._id },
-            process.env.SECRET_KEY,
+            SECRET_KEY,
             { expiresIn: '7d' },
           );
           res.send({ token });
@@ -40,6 +43,8 @@ const getCurrentUser = (req, res, next) => {
         throw new BadRequestError('Переданы некорректные данные!');
       } else if (err.message === 'NotFound') {
         throw new NotFoundError('Пользователь не найден');
+      } else {
+        throw err;
       }
     })
     .catch(next);
@@ -61,8 +66,13 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    // eslint-disable-next-line no-shadow
-    .then(({ email, _id }) => res.send({ email, _id }))
+    .then(({ email: resEmail, _id }) => res.send({ email: resEmail, _id }))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new BadRequestError('Переданы некорректные данные!');
+      }
+      throw err;
+    })
     .catch(next);
 };
 

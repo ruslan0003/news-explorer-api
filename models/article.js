@@ -51,8 +51,7 @@ const cardSchema = new mongoose.Schema({
   },
 
   date: {
-    type: Date,
-    default: Date.now,
+    type: String,
     required: true,
   },
 });
