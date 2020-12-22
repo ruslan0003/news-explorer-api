@@ -19,7 +19,7 @@ router.post('/articles', auth, celebrate({
 
 router.delete('/articles/:articleId', auth, celebrate({
   [Segments.PARAMS]: Joi.object().keys({
-    articleId: Joi.string().alphanum().length(24),
+    articleId: Joi.string().hex().length(24),
   }),
 }), deleteArticle);
 

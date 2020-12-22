@@ -4,9 +4,9 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
 const routes = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const limiter = require('./middlewares/rate-limiter');
 require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
@@ -14,16 +14,11 @@ const { DATABASE_URL = 'mongodb://localhost:27017/newsdb' } = process.env;
 const { NODE_ENV = 'development' } = process.env;
 const app = express();
 const NotFoundError = require('./controllers/errors/not-found-err');
+const centralErrorHandler = require('./middlewares/error-handler');
 
 if (NODE_ENV !== 'production') {
   console.log('Код запущен в режиме разработки');
 }
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Превышено допустимое количество запросов!',
-});
 
 app.use(cors());
 
@@ -57,14 +52,7 @@ app.use((req, res, next) => {
   next(new NotFoundError('Запрашиваемый ресурс не найден'));
 });
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  console.log(err);
-  res
-    .status(statusCode)
-    .send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
-  next();
-});
+app.use(centralErrorHandler);
 
 app.use(limiter);
 
