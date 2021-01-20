@@ -52,7 +52,7 @@ const getCurrentUser = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    name, email, password,
   } = req.body;
   if (!email || !password) {
     throw new BadRequestError('Переданы некорректные данные!');
@@ -64,7 +64,7 @@ const createUser = (req, res, next) => {
     return bcrypt.hash(req.body.password, 10);
   })
     .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
+      name, email, password: hash,
     }))
     .then(({ email: resEmail, _id }) => res.send({ email: resEmail, _id }))
     .catch((err) => {

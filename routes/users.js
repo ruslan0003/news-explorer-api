@@ -11,15 +11,15 @@ router.get('/users/me', auth, getCurrentUser);
 
 router.post('/signup', celebrate({
   [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(3),
+    email: Joi.string().required(),
+    password: Joi.string().required(),
   }).unknown(),
 }), createUser);
 
 router.post('/signin', celebrate({
   [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(3),
+    email: Joi.string().required(),
+    password: Joi.string().required(),
   }),
 }), login);
 
